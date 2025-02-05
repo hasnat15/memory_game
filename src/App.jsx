@@ -19,9 +19,11 @@ export default function App() {
           }
           
           const data = await response.json()
-          const dataSample = data.slice(0,5)
-          console.log(getRandomIndices(data))
-          setEmojisData(dataSample)
+         const dataSlice=getDataSlice(data)
+         const emojisArray = getEmojisArray(dataSlice)
+
+          
+          setEmojisData(emojisArray)
          
         
           setIsGameOn(true) 
@@ -31,7 +33,14 @@ export default function App() {
       
   }
 
-  function getRandomIndices(data){
+  function getDataSlice(data){
+    const randomIndices=getRandomIndices(data)
+
+      const dataSlice=randomIndices.map((index)=>(data[index]))
+      return dataSlice
+  }
+
+  function getRandomIndices(data){  
    const randomIndicesArray=[]
 
     for(let i=0; i<5; i++ ){
@@ -43,6 +52,22 @@ export default function App() {
       }
     }
       return randomIndicesArray;
+  }
+
+  function getEmojisArray(data){
+
+    const pairedEmojisArray=[...data, ...data]
+
+    for(let i=pairedEmojisArray.length-1; i>0; i--){
+      
+      const j =Math.floor(Math.random()* (i+1))
+      const temp = pairedEmojisArray[i]
+      pairedEmojisArray[i]=pairedEmojisArray[j]
+          pairedEmojisArray[j]=temp
+    }
+
+    return pairedEmojisArray
+
   }
     
     function turnCard() {
