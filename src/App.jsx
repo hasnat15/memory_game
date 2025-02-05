@@ -5,6 +5,9 @@ import MemoryCard from './components/MemoryCard'
 export default function App() {
     const [isGameOn, setIsGameOn] = useState(false)
     
+    const [emojisData, setEmojisData] = useState([])
+    console.log(emojisData)
+    
     async function startGame(e) {
       e.preventDefault()
       
@@ -16,12 +19,30 @@ export default function App() {
           }
           
           const data = await response.json()
-          console.log(data)
+          const dataSample = data.slice(0,5)
+          console.log(getRandomIndices(data))
+          setEmojisData(dataSample)
+         
+        
           setIsGameOn(true) 
       } catch(err) {
           console.error(err)
       }
       
+  }
+
+  function getRandomIndices(data){
+   const randomIndicesArray=[]
+
+    for(let i=0; i<5; i++ ){
+      const randomNum= Math.floor(Math.random()*data.length)
+      if(!randomIndicesArray.includes(randomNum)){
+        randomIndicesArray.push(randomNum)
+      }else{
+        i--
+      }
+    }
+      return randomIndicesArray;
   }
     
     function turnCard() {
@@ -32,7 +53,7 @@ export default function App() {
         <main>
             <h1>Memory</h1>
             {!isGameOn && <Form handleSubmit={startGame} />}
-            {isGameOn && <MemoryCard handleClick={turnCard} />}
+            {isGameOn && <MemoryCard handleClick={turnCard} data={emojisData} />}
         </main>
     )
 }
